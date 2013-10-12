@@ -65,7 +65,6 @@ namespace Asg2_6262732
         #endregion
 
         #region Timer
-        float startTimer;
         float elapse;
         #endregion
 
@@ -128,7 +127,7 @@ namespace Asg2_6262732
 
             #region Text
             _TextList = new List<Text>();
-            _Points = new Text("0000000", new Vector2(0, 0));
+            _Points = new Text("0000000", new Vector2(55, 20));
             _TextList.Add(_Points);
             #endregion
 
@@ -205,33 +204,35 @@ namespace Asg2_6262732
                     {
                         Food f = _foodList[0];
                         if (f._FoodDamage == 10)
-                            _Points.SetText(Convert.ToString(Convert.ToInt32(_Points.GetText()) + 200));
+                            _Points.SetText(Convert.ToString(Convert.ToInt32(_Points.GetText()) + 200 * f._Amount));
                         if (f._FoodDamage == 7)
-                            _Points.SetText(Convert.ToString(Convert.ToInt32(_Points.GetText()) + 100));
+                            _Points.SetText(Convert.ToString(Convert.ToInt32(_Points.GetText()) + 100 * f._Amount));
                         if (f._FoodDamage == 5)
-                            _Points.SetText(Convert.ToString(Convert.ToInt32(_Points.GetText()) + 50));
+                            _Points.SetText(Convert.ToString(Convert.ToInt32(_Points.GetText()) + 50 * f._Amount));
                         _foodList.Remove(f);
                         elapse -= 1;
+                        _Audio.Play("Ping");
                     }
                     else if (_foodList.Count <= 0)
                     {
                         level++;
                         elapse = 0;
                         _CurrentGameState = GameState.NextLevel;
+                        _Audio.StartNextLevel();
                    }
                 break;
                 #endregion
 
                 #region Next Level
                 case GameState.NextLevel:
-                elapse += (float)gameTime.ElapsedGameTime.TotalSeconds;
                 _LevelAnnounce.SetText("Level " + level);
-                if (elapse > 3)
+                if (!_Audio._NextLevel.IsPlaying)
                 {
                     Reset();
                     elapse = 0;
                     _CurrentGameState = GameState.Playing;
                     FirstTimeSetup(7 - level, 7 + level);
+                    _Audio.ResetSounds();
                 }
                 break;
                 #endregion
@@ -442,6 +443,7 @@ namespace Asg2_6262732
 
                 #region Counting
                 case GameState.Counting:
+                    _UI.Draw(spriteBatch);
                     foreach (Food node in _foodList)
                         node.Draw(spriteBatch);
                     foreach (Text node in _TextList)
@@ -461,14 +463,13 @@ namespace Asg2_6262732
                 #region Playing
                 case GameState.Playing:
                     _UI.Draw(spriteBatch);
-            
+                    _IceCreamCone.Draw(spriteBatch);
                     foreach (Food node in _foodList)
                         node.Draw(spriteBatch);
                     foreach (Hole node in _holeList)
                         node.Draw(spriteBatch);
                     foreach (Text node in _TextList)
                        node.Draw(spriteBatch, spriteFont, Color.White);
-                    _IceCreamCone.Draw(spriteBatch);
                     _HealthBar.Draw(spriteBatch);
                     _kathy.Draw(spriteBatch);
                     break;

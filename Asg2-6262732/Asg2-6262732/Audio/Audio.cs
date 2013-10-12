@@ -14,8 +14,22 @@ namespace Asg2_6262732
         SoundBank soundBank;
         SoundBank soundEffect;
         Cue _Background = null;
+        public Cue _NextLevel
+        {
+            get;
+            private set;
+        }
         Cue _GameOver = null;
-        bool _EndPlay;
+        public bool _EndPlay
+        {
+            get;
+            private set;
+        }
+        public bool _NextLevelSound
+        {
+            get;
+            private set;
+        }
         #endregion
 
         #region Methods
@@ -29,6 +43,17 @@ namespace Asg2_6262732
             _Background = soundBank.GetCue("Background");
             _Background.Play();
             _EndPlay = false;
+            _NextLevel = soundBank.GetCue("NextLevel");
+            _Background.Play();
+            _NextLevelSound = false;
+        }
+        public void StartNextLevel()
+        {
+            if (!_NextLevelSound)
+            {
+                _NextLevel.Play();
+                _NextLevelSound = true;
+            }
         }
         public void StartGameOver()
         {
@@ -45,10 +70,17 @@ namespace Asg2_6262732
             _EndPlay = false;
             _GameOver.Stop(AudioStopOptions.Immediate);
         }
+        public void ResetSounds()
+        {
+            _NextLevelSound = false;
+            _EndPlay = false;
+        }
         public void Update()
         {
-            if (!_EndPlay && !_Background.IsPlaying)
+            if (!_NextLevelSound && !_EndPlay && !_Background.IsPlaying)
+            {
                 _Background.Play();
+            }
         }
         public void Play(String str)
         {
