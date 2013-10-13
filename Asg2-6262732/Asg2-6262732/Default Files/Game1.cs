@@ -308,6 +308,14 @@ namespace Asg2_6262732
                                     e.temp.Add(from);
                                     _HealthBar.DecreaseHp(from._FoodDamage);
                                 }
+                            if (e._Rectangle.Intersects(_kathy._Rec))
+                            {
+
+                            }
+                        }
+                        if (node._Rectangle.Intersects(_kathy._Rec))
+                        {
+
                         }
                         eCount += node._Enemy.Count;
                     }

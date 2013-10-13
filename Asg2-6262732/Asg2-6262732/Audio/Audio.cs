@@ -48,7 +48,7 @@ namespace Asg2_6262732
             audioEngine = new AudioEngine(@"Content\Audio\FoodFightNow.xgs");
             waveBank = new WaveBank(audioEngine, @"Content\Audio\Wave Bank.xwb");
             soundBank = new SoundBank(audioEngine, @"Content\Audio\Long.xsb");
-            soundEffect = new SoundBank(audioEngine, @"Content\Audio\Short.xsb");
+            
             _GameOver = soundBank.GetCue("GameOver");
             _Background = soundBank.GetCue("Background");
             _Background.Play();
@@ -104,9 +104,10 @@ namespace Asg2_6262732
                 _Background.Play();
             }
         }
-        public void Play(String str)
+        public void Play(String bank, String effect)
         {
-            soundEffect.GetCue(str).Play();
+            new SoundBank(audioEngine, @"Content\Audio\" + bank +".xsb").GetCue(effect).Play();
+//            soundEffect.GetCue(str).Play();
         }
         #endregion
     }
