@@ -214,7 +214,7 @@ namespace Asg2_6262732
                         elapse -= 1;
                         _Audio.Play("Ping");
                     }
-                    else if (_foodList.Count <= 0)
+                    else if (elapse > 1 && _foodList.Count <= 0)
                     {
                         level++;
                         elapse = 0;
