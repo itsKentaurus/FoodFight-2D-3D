@@ -12,7 +12,7 @@ namespace Asg2_6262732
         AudioEngine audioEngine;
         WaveBank waveBank;
         SoundBank soundBank;
-        SoundBank soundEffect;
+//        SoundBank soundEffect;
         Cue _Background = null;
         public Cue _Victory
         {
@@ -47,7 +47,7 @@ namespace Asg2_6262732
         {
             audioEngine = new AudioEngine(@"Content\Audio\FoodFightNow.xgs");
             waveBank = new WaveBank(audioEngine, @"Content\Audio\Wave Bank.xwb");
-            soundBank = new SoundBank(audioEngine, @"Content\Audio\Long.xsb");
+            soundBank = new SoundBank(audioEngine, @"Content\Audio\GameMusic.xsb");
             
             _GameOver = soundBank.GetCue("GameOver");
             _Background = soundBank.GetCue("Background");

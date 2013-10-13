@@ -127,8 +127,6 @@ namespace Asg2_6262732
 
             #region Text
             _TextList = new List<Text>();
-            _Points = new Text("000", new Vector2(55, 20));
-            _TextList.Add(_Points);
             #endregion
 
             #region HealthBar
@@ -145,7 +143,6 @@ namespace Asg2_6262732
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteFont = Content.Load<SpriteFont>("font");
-//            graphics.IsFullScreen = _FullScreenToggle;
         }
 
         protected override void UnloadContent()
@@ -212,7 +209,7 @@ namespace Asg2_6262732
                             _Points.SetText(Convert.ToString(Convert.ToInt32(_Points.GetText()) + 50 * f._Amount));
                         _foodList.Remove(f);
                         elapse -= 1;
-                        _Audio.Play("Ping");
+                        _Audio.Play("GameEffect", "Ping");
                     }
                     else if (elapse > 1 && _foodList.Count <= 0)
                     {
@@ -226,7 +223,7 @@ namespace Asg2_6262732
 
                 #region Next Level
                 case GameState.NextLevel:
-                _LevelAnnounce.SetText("Level " + level);
+                _LevelAnnounce.SetText(new Vector2(graphics.PreferredBackBufferWidth/2 - 50, graphics.PreferredBackBufferHeight/2 - 25),"Level " + level);
                 if (!_Audio._NextLevel.IsPlaying)
                 {
                     Reset();
@@ -241,6 +238,7 @@ namespace Asg2_6262732
                 #region Playing
                 case GameState.Playing:
                     #region Declarations
+                    _LevelAnnounce.SetText(new Vector2(graphics.PreferredBackBufferWidth/3, 20),"Level " + level);
                     _PreviouysGameState = GameState.Playing;
                     _Resume.SetPosition(new Vector2((graphics.PreferredBackBufferWidth / 100) * 45, (graphics.PreferredBackBufferHeight / 100) * 35));
                     int eCount = 0;
@@ -256,7 +254,7 @@ namespace Asg2_6262732
                     if ((_PreviousKey.IsKeyDown(Keys.Space) && _CurrentKey.IsKeyUp(Keys.Space)) && _kathy._hasThrownFood)
                     {
                         _kathy.Shoot();
-                        _Audio.Play("Throw");
+                        _Audio.Play("Kathy", "Throw");
                     }
                     if (_PreviousKey.IsKeyDown(Keys.E) && _CurrentKey.IsKeyUp(Keys.E) && _kathy._hasThrownFood &&
                         _HealthBar._CurrentDamage != 11)
@@ -299,7 +297,7 @@ namespace Asg2_6262732
                                     node.deadEnemy.Add(e);
                                     _kathy.temp.Add(to);
                                     _Points.SetText(Convert.ToString(Convert.ToInt32(_Points.GetText()) + 100));
-                                    _Audio.Play("Hit");
+                                    _Audio.Play("Enemy", "Doh");
                                 }
 
                             foreach(ThrownFood from in e._FoodThrown)
@@ -323,7 +321,7 @@ namespace Asg2_6262732
                    for (int i = eCount; i < 3 + level; ++i)
                     {
                         _holeList[r.Next(_holeList.Count)].SpawnEnemy();
-                        _Audio.Play("Summon");
+                        _Audio.Play("Hole", "Summon");
                     }
                     #endregion
 
@@ -441,6 +439,7 @@ namespace Asg2_6262732
                     _Mouse.Draw(spriteBatch);
                     break;
                 #endregion
+
                 #region Options
                 case GameState.Options:
                     _Resume.Draw(spriteBatch);
@@ -465,7 +464,7 @@ namespace Asg2_6262732
 
                 #region Next Level
                 case GameState.NextLevel:
-                _LevelAnnounce.Draw(spriteBatch, spriteFont, Color.White);
+                    _LevelAnnounce.Draw(spriteBatch, spriteFont, Color.White);
                 break;
                 #endregion
 
@@ -503,7 +502,7 @@ namespace Asg2_6262732
 
                 #region GameOver
                 case GameState.GameOver:
-                   spriteBatch.Begin();
+                    spriteBatch.Begin();
                     spriteBatch.Draw(_GameOver, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
                     spriteBatch.End();
                     _Exit.Draw(spriteBatch);
@@ -513,17 +512,25 @@ namespace Asg2_6262732
                #endregion
             }
 
-
-
             base.Draw(gameTime);
         }
+
+        /** private void FirstTimeSetup(int NumFood, int NumHoles)
+         *  This funtion accepts two arguments: NumFood and NumHoles
+         *  With these arguments it will display the number of food and holes will spawn
+         *  This function will also create the objects necessary to play the game
+         *  such as kathy, icecream, health, etc..
+         */
         private void FirstTimeSetup(int NumFood, int NumHoles)
         {
             if (_Set) return;
             _Set = true;
 
-
+            #region Kathy
             _kathy.SetPosition(new Vector2(_UI._Bounds.Right - 50, ((_UI._Bounds.Top + _UI._Bounds.Bottom) / 2) - 25));
+            #endregion
+
+            #region Texture Calling
             /*  Set Ground Banana Texture */
             Texture2D[] Banana = new Texture2D[7];
             Banana[0] = Content.Load<Texture2D>("Images/General/Pile");
@@ -561,12 +568,19 @@ namespace Asg2_6262732
             _SingleFOOD.Add(Content.Load<Texture2D>("Images/Food/ThrownObject/Orange"));
             _SingleFOOD.Add(Content.Load<Texture2D>("Images/Food/ThrownObject/Pizza"));
             _SingleFOOD.Add(Content.Load<Texture2D>("Images/Food/ThrownObject/banana"));
-           int[] health = new int[3];
+            #endregion
+
+            #region Food Value
+            int[] health = new int[3];
             health[0] = 5;
             health[1] = 10;
             health[2] = 7;
+            #endregion
+
+            #region Food Spawn Location
             for (int i = 0; i < NumFood; ++i)
             {
+                #region Food Declaraction
                 Vector2 spawn = new Vector2(rand.Next(_UI.BoxWidth - 70) + 20, rand.Next(_UI.BoxHeight - 70) + 10) +
                     new Vector2((graphics.PreferredBackBufferWidth - _UI.BoxWidth) / 2, (graphics.PreferredBackBufferHeight - _UI.BoxHeight) / 2 + _UI.HorizontalBar.Height);
                 Food f = new Food();
@@ -576,7 +590,10 @@ namespace Asg2_6262732
                     _SingleFOOD[q],
                     rand.Next(5) + 2,
                     health[q]);
-               for (int j = 0; j < _foodList.Count; ++j )
+                #endregion
+
+                #region Collision Check
+                for (int j = 0; j < _foodList.Count; ++j )
                 {
                     while (_foodList[j]._Rectangle.Intersects(f._Rectangle))
                     {
@@ -585,10 +602,14 @@ namespace Asg2_6262732
                         f.SetPosition(spawn);
                         j = 0;
                     }
-               }
+                }
+                #endregion
+
                 _foodList.Add(f);
             }
+            #endregion
 
+            #region Food
             Food[] ef = new Food[3];
             ef[0] = new Food();
             ef[1] = new Food();
@@ -596,19 +617,28 @@ namespace Asg2_6262732
             ef[0].EnemyInitialize(_SingleFOOD[0], 256, 5);
             ef[1].EnemyInitialize(_SingleFOOD[1], 256, 10);
             ef[2].EnemyInitialize(_SingleFOOD[2], 256, 7);
+            #endregion
+
+            #region Hole Spawn Location
             for (int i = 0; i < NumHoles; ++i)
             {
+                #region Hole Declaration
                 Vector2 spawn = new Vector2(rand.Next(_UI.BoxWidth - 70) + 20, rand.Next(_UI.BoxHeight - 70) + 10) +
                     new Vector2((graphics.PreferredBackBufferWidth - _UI.BoxWidth) / 2, (graphics.PreferredBackBufferHeight - _UI.BoxHeight) / 2 + _UI.HorizontalBar.Height);
                 Hole hole = new Hole();
-               hole.Initialize(spawn,
+                hole.Initialize(spawn,
                     Content.Load<Texture2D>("Images/General/Hole"),
                     Content.Load<Texture2D>("Images/Character/Chef"),
                     ef);
+                #endregion
+
+                #region Collision Check
                 bool clear = false;
                 while (!clear)
                 {
                     clear = true;
+
+                    #region Check if spawns on food
                     for (int j = 0; j < _foodList.Count; ++j)
                    {
                         while (_foodList[j]._Rectangle.Intersects(hole._Rectangle))
@@ -619,6 +649,9 @@ namespace Asg2_6262732
                             j = 0;
                         }
                    }
+                    #endregion
+
+                    #region Check if hole collides with another whole
                     for (int j = 0; j < _holeList.Count; ++j)
                     {
                         while (_holeList[j]._Rectangle.Intersects(hole._Rectangle))
@@ -632,47 +665,83 @@ namespace Asg2_6262732
                        if (!clear)
                             break;
                     }
+                    #endregion
                 }
+                #endregion
+
                 _holeList.Add(hole);
             }
+            #endregion
+
+            #region IceCream
             Texture2D IceCreamCone = Content.Load<Texture2D>("Images/Food/IceCreamCone/IceCream");
             _IceCreamCone.Initialize(new Vector2(_UI._Bounds.Left, rand.Next(_UI.BoxHeight) + _UI._Bounds.Top), IceCreamCone, 24);
-            /*  Mouse   */
-            _Mouse = new Cursor();
-            _Mouse.Initialize(Content.Load<Texture2D>("Images/Cursor/Cursor"));
+            #endregion
 
-            /*  Level Display   */
-            _LevelAnnounce = new Text("", new Vector2(graphics.PreferredBackBufferWidth/2, graphics.PreferredBackBufferHeight/2));
+            #region Only First Level
+            if (level == 1)
+            {
+                #region Mouse
+                _Mouse = new Cursor();
+                _Mouse.Initialize(Content.Load<Texture2D>("Images/Cursor/Cursor"));
+                #endregion
+
+                #region Text
+                _LevelAnnounce = new Text("", new Vector2(graphics.PreferredBackBufferWidth / 3, 20));
+                _Points = new Text("000", new Vector2(55, 20));
+                _TextList.Add(_Points);
+                _TextList.Add(_LevelAnnounce);
+                #endregion
+            }
+            #endregion
 
         }
 
+        /** public void Reset()
+         *  This Function reset all objects to 0
+         *  so when FirstTimeSetup runs it will create 
+         *  from level one
+         */
         public void Reset()
         {
             if (!_Set) return;
             _Set = false;
-           foreach (Hole node in _holeList)
+
+            foreach (Hole node in _holeList)
             {
                 node.Update();
                 foreach (Enemy e in node._Enemy)
                 {
-                    foreach (ThrownFood to in _kathy._FoodThrown)
-                        _kathy.temp.Add(to);
-                    foreach (ThrownFood from in e._FoodThrown)
-                        e.temp.Add(from);
+                foreach (ThrownFood to in _kathy._FoodThrown)
+                    _kathy.temp.Add(to);
+                foreach (ThrownFood from in e._FoodThrown)
+                    e.temp.Add(from);
                     node.deadEnemy.Add(e);
                 }
-           }
+            }
+            List<Text> empt = new List<Text>();
             List<Food> empty = new List<Food>();
             List<Hole> emp = new List<Hole>();
             foreach (Hole node in _holeList)
-               emp.Add(node);
+                emp.Add(node);
             foreach (Hole node in emp)
                 _holeList.Remove(node);
+
             foreach (Food food in _foodList)
-                if (food.HasFood())
-                    empty.Add(food);
+            if (food.HasFood())
+                empty.Add(food);
             foreach (Food node in empty)
                 _foodList.Remove(node);
+
+            if (_CurrentGameState == GameState.GameOver)
+            {
+                level = 1;
+
+                foreach (Text node in _TextList)
+                    empt.Add(node);
+                foreach (Text node in empt)
+                    _TextList.Remove(node);
+            }
 
         }
     }

@@ -27,6 +27,10 @@ namespace Asg2_6262732
         #endregion
 
         #region Method
+        public Text()
+        {
+            // Ment to be Empty
+        }
         public Text(String text, Vector2 position)
         {
             _Text = text;
@@ -34,6 +38,11 @@ namespace Asg2_6262732
         }
         public void SetText(String text)
         {
+            _Text = text;
+        }
+        public void SetText(Vector2 position, String text)
+        {
+            _Position = position;
             _Text = text;
         }
         public String GetText()
