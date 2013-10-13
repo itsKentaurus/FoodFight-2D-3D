@@ -127,7 +127,7 @@ namespace Asg2_6262732
 
             #region Text
             _TextList = new List<Text>();
-            _Points = new Text("0000000", new Vector2(55, 20));
+            _Points = new Text("000", new Vector2(55, 20));
             _TextList.Add(_Points);
             #endregion
 
@@ -198,9 +198,10 @@ namespace Asg2_6262732
 
                 #region Counting
                 case GameState.Counting:
+                    _Audio.StartVictory();
+                    if (_Audio._Victory.IsPlaying) return;
                     elapse += (float) gameTime.ElapsedGameTime.TotalSeconds;
-                    Console.WriteLine(elapse);
-                    if (elapse > 1 && _foodList.Count > 0)
+                    if ( elapse > 1 && _foodList.Count > 0)
                     {
                         Food f = _foodList[0];
                         if (f._FoodDamage == 10)

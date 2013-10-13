@@ -14,6 +14,11 @@ namespace Asg2_6262732
         SoundBank soundBank;
         SoundBank soundEffect;
         Cue _Background = null;
+        public Cue _Victory
+        {
+            get;
+            private set;
+        }
         public Cue _NextLevel
         {
             get;
@@ -26,6 +31,11 @@ namespace Asg2_6262732
             private set;
         }
         public bool _NextLevelSound
+        {
+            get;
+            private set;
+        }
+        public bool _VictorySound
         {
             get;
             private set;
@@ -44,13 +54,24 @@ namespace Asg2_6262732
             _Background.Play();
             _EndPlay = false;
             _NextLevel = soundBank.GetCue("NextLevel");
-            _Background.Play();
             _NextLevelSound = false;
+            _Victory = soundBank.GetCue("Victory");
+            _VictorySound = false;
+        }
+        public void StartVictory()
+        {
+            if (!_VictorySound)
+            {
+                _Background.Stop(AudioStopOptions.Immediate);
+                _Victory.Play();
+                _VictorySound = true;
+            }
         }
         public void StartNextLevel()
         {
             if (!_NextLevelSound)
             {
+                _Background.Stop(AudioStopOptions.Immediate);
                 _NextLevel.Play();
                 _NextLevelSound = true;
             }
@@ -74,10 +95,11 @@ namespace Asg2_6262732
         {
             _NextLevelSound = false;
             _EndPlay = false;
+            _VictorySound = false;
         }
         public void Update()
         {
-            if (!_NextLevelSound && !_EndPlay && !_Background.IsPlaying)
+            if (!_VictorySound && !_NextLevelSound && !_EndPlay && !_Background.IsPlaying)
             {
                 _Background.Play();
             }
