@@ -23,6 +23,7 @@ namespace Asg2_6262732
         Options,
         Playing,
         Hotkeys,
+        Instructions,
         GameOver,
         Counting,
         NextLevel,

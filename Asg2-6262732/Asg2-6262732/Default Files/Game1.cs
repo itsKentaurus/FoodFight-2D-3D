@@ -48,6 +48,7 @@ namespace Asg2_6262732
         Texture2D Menu;
         Texture2D _Credits;
         Texture2D _GameOver;
+        Texture2D _Instruction;
         Button btnPlay;
         Button _Exit;
         Button _Resume;
@@ -104,6 +105,7 @@ namespace Asg2_6262732
             
             Menu = Content.Load<Texture2D>("Images/Menus/Screen/Menu");
             _Credits = Content.Load<Texture2D>("Images/Menus/Screen/Credits");
+            _Instruction = Content.Load<Texture2D>("Images/Menus/Screen/Instructions");
             _GameOver = Content.Load<Texture2D>("Images/Menus/Screen/GameOver");
             btnPlay = new Button(Content.Load<Texture2D>("Images/Menus/Button/Button"), graphics.GraphicsDevice);
             _Exit = new Button(Content.Load<Texture2D>("Images/Menus/Button/Exit"), graphics.GraphicsDevice);
@@ -340,6 +342,18 @@ namespace Asg2_6262732
 
                 #endregion
 
+                case GameState.Instructions:
+                    if (_PreviousKey.IsKeyDown(Keys.Escape) && _CurrentKey.IsKeyUp(Keys.Escape))
+                    {
+                        _CurrentGameState = _PreviouysGameState;
+                        _PreviouysGameState = GameState.Empty;
+                    }
+                    if (_BackToStart.isClicked == true)
+                        _CurrentGameState = _PreviouysGameState;
+                    _BackToStart.SetPosition(new Vector2((graphics.PreferredBackBufferWidth / 100) * 70, (graphics.PreferredBackBufferHeight / 100) * 70));
+                    _BackToStart.Update(mouse);
+                    break;
+
                 #region Options
                 case GameState.Options:
                     _PreviouysGameState = GameState.Options;
@@ -482,6 +496,14 @@ namespace Asg2_6262732
                     _kathy.Draw(spriteBatch);
                     break;
                 #endregion
+
+                case GameState.Instructions:
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(_Instruction, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+                    spriteBatch.End();
+                    _BackToStart.Draw(spriteBatch);
+                    _Mouse.Draw(spriteBatch);
+                    break;
 
                 #region Credits
                 case GameState.Credits:
