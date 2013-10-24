@@ -310,12 +310,18 @@ namespace Asg2_6262732
                                 }
                             if (e._Rectangle.Intersects(_kathy._Rec))
                             {
-
+                                node.deadEnemy.Add(e);
+                                _kathy.SetPosition(new Vector2(_UI._Bounds.Right - 50, ((_UI._Bounds.Top + _UI._Bounds.Bottom) / 2) - 25));
+                                _Points.SetText(Convert.ToString(Convert.ToInt32(_Points.GetText()) - 100));
+                                _HealthBar.DecreaseHp(20);
                             }
                         }
                         if (node._Rectangle.Intersects(_kathy._Rec))
                         {
-
+                            _kathy.SetPosition(new Vector2(_UI._Bounds.Right - 50, ((_UI._Bounds.Top + _UI._Bounds.Bottom) / 2) - 25));
+                            _Points.SetText(Convert.ToString(Convert.ToInt32(_Points.GetText()) - 100));
+                            _HealthBar.DecreaseHp(50);
+                            _Audio.Play("Kathy", "Scream");
                         }
                         eCount += node._Enemy.Count;
                     }
@@ -342,6 +348,7 @@ namespace Asg2_6262732
 
                 #endregion
 
+                #region Instructions
                 case GameState.Instructions:
                     if (_PreviousKey.IsKeyDown(Keys.Escape) && _CurrentKey.IsKeyUp(Keys.Escape))
                     {
@@ -353,6 +360,7 @@ namespace Asg2_6262732
                     _BackToStart.SetPosition(new Vector2((graphics.PreferredBackBufferWidth / 100) * 70, (graphics.PreferredBackBufferHeight / 100) * 70));
                     _BackToStart.Update(mouse);
                     break;
+                #endregion
 
                 #region Options
                 case GameState.Options:
@@ -497,6 +505,7 @@ namespace Asg2_6262732
                     break;
                 #endregion
 
+                #region Instructions
                 case GameState.Instructions:
                     spriteBatch.Begin();
                     spriteBatch.Draw(_Instruction, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
@@ -504,6 +513,7 @@ namespace Asg2_6262732
                     _BackToStart.Draw(spriteBatch);
                     _Mouse.Draw(spriteBatch);
                     break;
+                #endregion
 
                 #region Credits
                 case GameState.Credits:
