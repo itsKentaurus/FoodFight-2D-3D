@@ -49,6 +49,7 @@ namespace Asg2_6262732
         Texture2D _Credits;
         Texture2D _GameOver;
         Texture2D _Instruction;
+        Texture2D _Controls;
         Button btnPlay;
         Button _Exit;
         Button _Resume;
@@ -100,27 +101,6 @@ namespace Asg2_6262732
             _foodList = new List<Food>();
             #endregion
 
-            #region Menus
-            graphics.ApplyChanges();
-            
-            Menu = Content.Load<Texture2D>("Images/Menus/Screen/Menu");
-            _Credits = Content.Load<Texture2D>("Images/Menus/Screen/Credits");
-            _Instruction = Content.Load<Texture2D>("Images/Menus/Screen/Instructions");
-            _GameOver = Content.Load<Texture2D>("Images/Menus/Screen/GameOver");
-            btnPlay = new Button(Content.Load<Texture2D>("Images/Menus/Button/Button"), graphics.GraphicsDevice);
-            _Exit = new Button(Content.Load<Texture2D>("Images/Menus/Button/Exit"), graphics.GraphicsDevice);
-
-
-            _Resume = new Button(Content.Load<Texture2D>("Images/Menus/Button/Resume"), graphics.GraphicsDevice);
-            _Hotkeys = new Button(Content.Load<Texture2D>("Images/Menus/Button/Hotkeys"), graphics.GraphicsDevice);
-            _Credit = new Button(Content.Load<Texture2D>("Images/Menus/Button/Credits"), graphics.GraphicsDevice);
-            _BackToStart = new Button(Content.Load<Texture2D>("Images/Menus/Button/BackToStart"), graphics.GraphicsDevice);
-            Texture2D[] t = new Texture2D[2];
-            t[0] = Content.Load<Texture2D>("Images/Menus/Screen/FullScreenOff");
-            t[1] = Content.Load<Texture2D>("Images/Menus/Screen/FullScreenOn");
-
-            _FullScreen = new Button(t, graphics.GraphicsDevice, 2);
-            #endregion
 
             #region Audio
             _Audio = new Audio();
@@ -145,6 +125,29 @@ namespace Asg2_6262732
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteFont = Content.Load<SpriteFont>("font");
+
+            #region Menus
+            graphics.ApplyChanges();
+
+            Menu = Content.Load<Texture2D>("Images/Menus/Screen/Menu");
+            _Credits = Content.Load<Texture2D>("Images/Menus/Screen/Credits");
+            _Instruction = Content.Load<Texture2D>("Images/Menus/Screen/Instructions");
+            _GameOver = Content.Load<Texture2D>("Images/Menus/Screen/GameOver");
+            _Controls = Content.Load<Texture2D>("Images/Menus/Screen/Controls");
+            btnPlay = new Button(Content.Load<Texture2D>("Images/Menus/Button/Button"), graphics.GraphicsDevice);
+            _Exit = new Button(Content.Load<Texture2D>("Images/Menus/Button/Exit"), graphics.GraphicsDevice);
+
+
+            _Resume = new Button(Content.Load<Texture2D>("Images/Menus/Button/Resume"), graphics.GraphicsDevice);
+            _Hotkeys = new Button(Content.Load<Texture2D>("Images/Menus/Button/Hotkeys"), graphics.GraphicsDevice);
+            _Credit = new Button(Content.Load<Texture2D>("Images/Menus/Button/Credits"), graphics.GraphicsDevice);
+            _BackToStart = new Button(Content.Load<Texture2D>("Images/Menus/Button/BackToStart"), graphics.GraphicsDevice);
+            Texture2D[] t = new Texture2D[2];
+            t[0] = Content.Load<Texture2D>("Images/Menus/Screen/FullScreenOff");
+            t[1] = Content.Load<Texture2D>("Images/Menus/Screen/FullScreenOn");
+
+            _FullScreen = new Button(t, graphics.GraphicsDevice, 2);
+            #endregion
         }
 
         protected override void UnloadContent()
@@ -328,7 +331,13 @@ namespace Asg2_6262732
 
                    for (int i = eCount; i < 3 + level; ++i)
                     {
-                        _holeList[r.Next(_holeList.Count)].SpawnEnemy();
+                        int j = 0;
+                        do
+                        {
+                            j = r.Next(_holeList.Count);
+                        }
+                        while (_holeList[j]._EnemyCount != 0);
+                        _holeList[j].SpawnEnemy();
                         _Audio.Play("Hole", "Summon");
                     }
                     #endregion
@@ -402,7 +411,7 @@ namespace Asg2_6262732
                         _CurrentGameState = _PreviouysGameState;
                         _PreviouysGameState = GameState.Empty;
                     }
-                    _BackToStart.SetPosition(new Vector2((graphics.PreferredBackBufferWidth / 100) * 45, (graphics.PreferredBackBufferHeight / 100) * 50));
+                    _BackToStart.SetPosition(new Vector2((graphics.PreferredBackBufferWidth / 100) * 85, (graphics.PreferredBackBufferHeight / 100) * 85));
                     _BackToStart.Update(mouse);
                     break;
                 #endregion
@@ -527,6 +536,9 @@ namespace Asg2_6262732
 
                 #region Hotkeys
                 case GameState.Hotkeys:
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(_Controls, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+                    spriteBatch.End();
                     _BackToStart.Draw(spriteBatch);
                     _Mouse.Draw(spriteBatch);
                     break;
@@ -541,7 +553,7 @@ namespace Asg2_6262732
                     _BackToStart.Draw(spriteBatch);
                     _Mouse.Draw(spriteBatch);
                     break;
-               #endregion
+                #endregion
             }
 
             base.Draw(gameTime);

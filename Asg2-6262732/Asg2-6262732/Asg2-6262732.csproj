@@ -82,6 +82,9 @@
     <Content Include="Content\Images\Container\VerticalBar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\Menus\Screen\Controls.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\Menus\Screen\Credits.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
