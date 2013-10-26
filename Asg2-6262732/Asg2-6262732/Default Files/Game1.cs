@@ -336,7 +336,7 @@ namespace Asg2_6262732
                         {
                             j = r.Next(_holeList.Count);
                         }
-                        while (_holeList[j]._EnemyCount != 0);
+                        while (_holeList[j]._Enemy.Count == 1);
                         _holeList[j].SpawnEnemy();
                         _Audio.Play("Hole", "Summon");
                     }
@@ -442,10 +442,6 @@ namespace Asg2_6262732
             #region Mouse
             _Mouse._Position.X = Mouse.GetState().X;
             _Mouse._Position.Y = Mouse.GetState().Y;
-            if (_Mouse._Position.X < 0 || _Mouse._Position.Y < 0 || _Mouse._Position.X > graphics.PreferredBackBufferWidth || _Mouse._Position.Y > graphics.PreferredBackBufferHeight)
-                IsMouseVisible = true;
-            else
-                IsMouseVisible = false;
             #endregion
 
             base.Update(gameTime);
