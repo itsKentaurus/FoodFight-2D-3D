@@ -11,81 +11,141 @@ using Microsoft.Xna.Framework.GamerServices;
 
 namespace Asg3_6262723
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class Game1 : Game
     {
+        #region Pre-Defined Class
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        #endregion
+
+        #region Defined Class
+        Character _Player;
+        Camera _Camera;
+        #endregion
+
+        #region Fields
+        List<Hole> _HoleList;
+        List<Food> _FoodList;
+        public Matrix _Projection
+        {
+            get;
+            private set;
+        }
+        #endregion
 
         public Game1()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = 800;
+
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
-        }
+            _Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 600f, 0.1f, 600);
+            _Camera = new Camera();
+            _Player = new Character(Content.Load<Model>("Player/Ship"), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f));
+            
+            _HoleList = new List<Hole>();
+            for (int i = 0; i < 6; ++i)
+                _HoleList.Add(new Chef(Content.Load<Model>("Player/Ship"), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f)));
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+                _FoodList = new List<Food>();
+            _FoodList.Add(new Food(Content.Load<Model>("Player/Ship"), new Vector3(0, 0, -10), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f)));
+        }
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
         }
-
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
         }
-
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            _Player.Update(gameTime);
+            _Camera.Update(gameTime, _Player);
+
+            foreach (Food node in _FoodList)
+                if (_Player._Bound.Intersects(node._Bound))
+                    _Player.PickUp(node);
 
             base.Update(gameTime);
         }
-
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            Controls();
+
+            Draw(_Player);
+            foreach (Object node in _ObjectList)
+                Draw(node);
+            foreach (Object node in _FoodList)
+                Draw(node);
+
 
             base.Draw(gameTime);
+        }
+        private void Controls()
+        {
+            KeyboardState ks = Keyboard.GetState();
+            Keys[] keys = ks.GetPressedKeys();
+            const float SPEED = 0.1f;
+            const float ANGLE = 0.1f;
+            foreach (Keys key in keys)
+            {
+                switch (key)
+                {
+                    case Keys.W:
+                        _Player.Move(-1, SPEED);
+                        break;
+                    case Keys.D:
+                        _Player.Turn(-1, ANGLE);
+                        break;
+                    case Keys.S:
+                        _Player.Move(1, SPEED);
+                        break;
+                    case Keys.A:
+                        _Player.Turn(1, ANGLE);
+                        break;
+                    case Keys.Space:
+                        _Player.Shoot();
+                        break;
+                    case Keys.E:
+                        _Player.Eat();
+                        break;
+                    case Keys.D1:
+                        _Camera.ToggleFirst();
+                        break;
+                    case Keys.D3:
+                        _Camera.ToggleThird();
+                        break;
+                }
+            }
+        }
+
+        public void Draw(Object Object)
+        {
+            foreach (ModelMesh mesh in Object._Model.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+
+                    effect.World = Object._World;
+                    effect.View = _Camera._Position;
+                    effect.Projection = _Projection;
+                }
+
+                mesh.Draw();
+            }
         }
     }
 }
