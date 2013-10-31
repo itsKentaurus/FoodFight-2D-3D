@@ -18,10 +18,27 @@ namespace Asg3_6262723
             get;
             private set;
         }
+        public Chef _Chef
+        {
+            get;
+            private set;
+        }
 
         public Hole(Model Model, Vector3 Position, Vector3 MinVec, Vector3 MaxVec, Chef Chef)
             : base(Model, Position, MinVec, MaxVec)
         {
+            _ChefList = new List<Chef>();
+            _Chef = Chef;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+        }
+
+        public void Summon()
+        {
+            Chef c = _Chef.Clone(_Position + new Vector3(0,1.5f,0));
+            _ChefList.Add(c);
         }
     }
 }

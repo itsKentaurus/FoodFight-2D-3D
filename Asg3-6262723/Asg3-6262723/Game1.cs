@@ -48,14 +48,18 @@ namespace Asg3_6262723
             base.Initialize();
             _Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 600f, 0.1f, 600);
             _Camera = new Camera();
-            _Player = new Character(Content.Load<Model>("Player/Ship"), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f));
+            _Player = new Character(Content.Load<Model>("Player/Player/Ship"), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f));
             
             _HoleList = new List<Hole>();
-            for (int i = 0; i < 6; ++i)
-                _HoleList.Add(new Chef(Content.Load<Model>("Player/Ship"), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f)));
+            for (int i = 0; i < 1; ++i)
+                _HoleList.Add(new Hole(Content.Load<Model>("Player/Ship"), 
+                    new Vector3(0, -1.5f, -10), 
+                    new Vector3(-0.5f, 0, -0.5f), 
+                    new Vector3(0.5f, 1, 0.5f), 
+                    new Chef(Content.Load<Model>("Player/Ship"), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f))));
 
-                _FoodList = new List<Food>();
-            _FoodList.Add(new Food(Content.Load<Model>("Player/Ship"), new Vector3(0, 0, -10), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f)));
+            _FoodList = new List<Food>();
+//            _FoodList.Add(new Food(Content.Load<Model>("Player/Ship"), new Vector3(0, 0, -10), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f)));
         }
         protected override void LoadContent()
         {
@@ -69,12 +73,36 @@ namespace Asg3_6262723
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            int ChefCount = 0;
+            Random r = new Random();
+
+
             _Player.Update(gameTime);
             _Camera.Update(gameTime, _Player);
 
             foreach (Food node in _FoodList)
                 if (_Player._Bound.Intersects(node._Bound))
                     _Player.PickUp(node);
+
+            foreach (Hole h in _HoleList)
+            {
+                foreach (Chef c in h._ChefList)
+                {
+                    c.Update(gameTime, _Player._Position);
+                }
+                ChefCount += h._ChefList.Count;
+            }
+
+            for (int i = ChefCount; i < 1; ++i)
+            {
+                int j = 0;
+                do
+                {
+                    j = r.Next(_HoleList.Count);
+                }
+                while (_HoleList[j]._ChefList.Count == 1);
+                _HoleList[j].Summon();
+            }
 
             base.Update(gameTime);
         }
@@ -85,10 +113,14 @@ namespace Asg3_6262723
             Controls();
 
             Draw(_Player);
-            foreach (Object node in _ObjectList)
-                Draw(node);
-            foreach (Object node in _FoodList)
-                Draw(node);
+            foreach (Food f in _FoodList)
+                Draw(f);
+            foreach (Hole h in _HoleList)
+            {
+                Draw(h);
+                foreach (Chef c in h._ChefList)
+                    Draw(c);
+            }
 
 
             base.Draw(gameTime);

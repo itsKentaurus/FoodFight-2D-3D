@@ -22,10 +22,15 @@ namespace Asg3_6262723
             get;
             private set;
         }
-
+        private Chef(Chef Chef, Vector3 Position)
+            : base(Chef._Model, Position, Chef._Bound.Min, Chef._Bound.Max)
+        {
+            _Direction = new Vector3(0, 0, -1);
+        }
         public Chef(Model Model, Vector3 MinVec, Vector3 MaxVec)
             : base(Model, MinVec, MaxVec)
         {
+            _Direction = new Vector3(0, 0, -1);
         }
 
         public Chef(Model Model, Vector3 Position, Vector3 MinVec, Vector3 MaxVec)
@@ -34,12 +39,13 @@ namespace Asg3_6262723
             _Direction = new Vector3(0, 0, -1);
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Vector3 PlayerPos)
         {
+            Aim(PlayerPos);
             _World = Matrix.CreateRotationY(_Angle) * Matrix.CreateTranslation(_Position);
         }
 
-        public void Aim(Vector3 PlayerPos)
+        private void Aim(Vector3 PlayerPos)
         {
 
             Vector3 PlayerDirection = Vector3.Normalize( PlayerPos - _Position);
@@ -51,6 +57,13 @@ namespace Asg3_6262723
             _Angle = (float) Math.Acos( dot / (a*b));
             if (PlayerDirection.X > 0)
                 _Angle *= -1;
+
+        }
+
+        internal Chef Clone(Vector3 Position)
+        {
+            Chef c = new Chef(this, Position);
+            return c;
         }
     }
 }
