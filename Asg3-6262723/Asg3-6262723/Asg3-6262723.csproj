@@ -46,6 +46,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.AudioImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.EffectImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.FBXImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.TextureImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.XImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="OpenTK">
       <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\WindowsGL\OpenTK.dll</HintPath>
     </Reference>
@@ -66,10 +72,13 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="Content\Player\captainatom_model_FBX.fbx">
+    <None Include="Content\Models\floor.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Content\Player\Patrick.fbx">
+    <None Include="Content\Models\Player.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Models\Square.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Content\Player\Ship.xnb">
@@ -77,15 +86,6 @@
     </None>
     <None Include="Content\Player\ShipTexture_0.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Content\Player\Player\test_FBX_Y.FBX">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Content\Player\Player\test_FBX_Z.FBX">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Content\Player\Player\test_XNA.X">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

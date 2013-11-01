@@ -1,12 +1,15 @@
 ﻿#region Using Statements
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Media;
+
 #endregion
 
 namespace Asg3_6262723
@@ -26,6 +29,7 @@ namespace Asg3_6262723
         #region Fields
         List<Hole> _HoleList;
         List<Food> _FoodList;
+        List<Object> _ObjectList;
         public Matrix _Projection
         {
             get;
@@ -48,7 +52,6 @@ namespace Asg3_6262723
             base.Initialize();
             _Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 600f, 0.1f, 600);
             _Camera = new Camera();
-            _Player = new Character(Content.Load<Model>("Player/Player/Ship"), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f));
             
             _HoleList = new List<Hole>();
             for (int i = 0; i < 1; ++i)
@@ -60,6 +63,9 @@ namespace Asg3_6262723
 
             _FoodList = new List<Food>();
 //            _FoodList.Add(new Food(Content.Load<Model>("Player/Ship"), new Vector3(0, 0, -10), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f)));
+            _Player = new Character(Content.Load<Model>("Models/Player"), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f));
+            _ObjectList = new List<Object>();
+            _ObjectList.Add(new Object(Content.Load<Model>("Models/floor"), Vector3.Zero, Vector3.Zero,Vector3.Zero));
         }
         protected override void LoadContent()
         {
@@ -115,6 +121,8 @@ namespace Asg3_6262723
             Draw(_Player);
             foreach (Food f in _FoodList)
                 Draw(f);
+            foreach (Object o in _ObjectList)
+                Draw(o);
             foreach (Hole h in _HoleList)
             {
                 Draw(h);
