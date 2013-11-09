@@ -50,7 +50,7 @@ namespace Asg3_6262723
 
         public void Update(GameTime gameTime)
         {
-            _World = Matrix.CreateRotationY(_Angle) * Matrix.CreateTranslation(_Position);
+            _World = Matrix.CreateRotationX((float) -Math.PI / 2) *  (Matrix.CreateRotationY(_Angle) * Matrix.CreateTranslation(_Position));
             base.UpdatePosition(_Position);
         }
 

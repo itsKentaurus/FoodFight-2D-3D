@@ -55,11 +55,12 @@ namespace Asg3_6262723
             
             _HoleList = new List<Hole>();
             for (int i = 0; i < 1; ++i)
+                //                _HoleList.Add(new Hole(Content.Load<Model>("Models/Hole"),
                 _HoleList.Add(new Hole(Content.Load<Model>("Player/Ship"), 
                     new Vector3(0, -1.5f, -10), 
                     new Vector3(-0.5f, 0, -0.5f), 
-                    new Vector3(0.5f, 1, 0.5f), 
-                    new Chef(Content.Load<Model>("Player/Ship"), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f))));
+                    new Vector3(0.5f, 1, 0.5f),
+                    new Chef(Content.Load<Model>("Models/Chef"), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f))));
 
             _FoodList = new List<Food>();
 //            _FoodList.Add(new Food(Content.Load<Model>("Player/Ship"), new Vector3(0, 0, -10), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f)));

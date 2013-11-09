@@ -42,7 +42,7 @@ namespace Asg3_6262723
         public void Update(GameTime gameTime, Vector3 PlayerPos)
         {
             Aim(PlayerPos);
-            _World = Matrix.CreateRotationY(_Angle) * Matrix.CreateTranslation(_Position);
+            _World = Matrix.CreateRotationX((float)-(Math.PI / 2)) * (Matrix.CreateRotationY(_Angle + (float) Math.PI) * Matrix.CreateTranslation(_Position));
         }
 
         private void Aim(Vector3 PlayerPos)
