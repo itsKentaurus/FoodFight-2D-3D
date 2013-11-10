@@ -35,6 +35,12 @@ namespace Asg3_6262723
             private set;
         }
 
+
+        public Food(Model Model, Vector3 MinVec, Vector3 MaxVec)
+            : base(Model, MinVec, MaxVec)
+        {
+        }
+
         public Food(Model Model, Vector3 Position, Vector3 MinVec, Vector3 MaxVec)
             : base(Model, Position, MinVec, MaxVec)
         {
@@ -45,11 +51,13 @@ namespace Asg3_6262723
         }
         public void Update(GameTime gameTime)
         {
-
+            _Position += _Velocity;
+            _World = Matrix.CreateTranslation(_Position);
+            base.UpdatePosition();
         }
         public void Thrown(Vector3 Position, Vector3 Velocity)
         {
-            _Velocity = Velocity;
+            _Velocity = Velocity/10;
             _Position = Position;
         }
 

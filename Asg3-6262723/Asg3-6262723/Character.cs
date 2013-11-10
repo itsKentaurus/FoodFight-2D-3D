@@ -51,9 +51,12 @@ namespace Asg3_6262723
         public void Update(GameTime gameTime)
         {
             _World = Matrix.CreateRotationX((float) -Math.PI / 2) *  (Matrix.CreateRotationY(_Angle) * Matrix.CreateTranslation(_Position));
-            base.UpdatePosition(_Position);
+            base.UpdatePosition();
         }
-
+        public void UpdatePosition(Vector3 Position)
+        {
+            _Position = Position;
+        }
         public void Move(int Direction, float Speed)
         {
             _Velocity = Direction * new Vector3(Speed * (float)Math.Sin(_Angle), 0, Speed * (float)Math.Cos(_Angle));

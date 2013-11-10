@@ -30,6 +30,22 @@ namespace Asg3_6262723
             get;
             private set;
         }
+        public Vector3 _Min
+        {
+            get;
+            private set;
+        }
+        public Vector3 _Max
+        {
+            get;
+            private set;
+        }
+        public Object(Model Model, Vector3 Position)
+        {
+            _Model = Model;
+            _World = Matrix.CreateRotationX((float)-(Math.PI / 2)) * Matrix.CreateTranslation(Position);
+
+        }
         public Object(Model Model, BoundingBox Bound)
         {
             _Model = Model;
@@ -38,19 +54,22 @@ namespace Asg3_6262723
         public Object(Model Model, Vector3 MinVec, Vector3 MaxVec)
         {
             _Bound = new BoundingBox(MinVec, MaxVec);
+            _Min = MinVec;
+            _Max = MaxVec;
             _Model = Model;
             _World = Matrix.CreateTranslation(new Vector3(0, 0, 0));
         }
-        public void UpdatePosition(Vector3 Position)
+        public void UpdatePosition()
         {
-            _Bound = new BoundingBox(_Bound.Min + Position, _Bound.Max + Position);
+            _Bound = new BoundingBox(_Min + _Position, _Max + _Position);
+
         }
         public Object(Model Model, Vector3 Position, Vector3 MinVec, Vector3 MaxVec)
         {
-            _Bound = new BoundingBox(MinVec, MaxVec);
+            _Bound = new BoundingBox(MinVec + Position, MaxVec + Position);
             _Model = Model;
-            _World = Matrix.CreateTranslation(Position);
             _Position = Position;
+            _World = Matrix.CreateTranslation(Position);
         }
     }
 }

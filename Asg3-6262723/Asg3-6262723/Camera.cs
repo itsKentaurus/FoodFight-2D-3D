@@ -29,13 +29,13 @@ namespace Asg3_6262723
         }
         public void Update(GameTime gameTime, Character Player)
         {
-            if (_VisionToggle == 3)
+            if (IsThirdPerson())
                 _Position = Matrix.CreateLookAt(new Vector3(10 * (float)Math.Cos(0) * (float)Math.Sin(Player._Angle),
-                                            7,
+                                            5,
                                             10 * (float)Math.Cos(Player._Angle)) + Player._Position, Player._Position, Vector3.UnitY);
-            if (_VisionToggle == 1)
-                _Position = Matrix.CreateLookAt(Player._Position, Player._Position + new Vector3(-1 * (float)Math.Cos(0) * (float)Math.Sin(Player._Angle),
-                                            -0,
+            if (IsFirstPerson())
+                _Position = Matrix.CreateLookAt(Player._Position + new Vector3(0,2,0), Player._Position + new Vector3(-1 * (float)Math.Cos(0) * (float)Math.Sin(Player._Angle),
+                                            2,
                                             -1 * (float)Math.Cos(Player._Angle)), Vector3.UnitY);
         }
         public void ToggleFirst()
@@ -45,6 +45,15 @@ namespace Asg3_6262723
         public void ToggleThird()
         {
             _VisionToggle = 3;
+        }
+        public bool IsFirstPerson()
+        {
+            return (_VisionToggle == 1);
+        }
+
+        public bool IsThirdPerson()
+        {
+            return (_VisionToggle == 3);
         }
         #endregion
     }
