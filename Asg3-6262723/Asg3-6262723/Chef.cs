@@ -12,7 +12,7 @@ namespace Asg3_6262723
 {
     class Chef : Object
     {
-
+        #region Fields
         public float _Angle
         {
             get;
@@ -50,6 +50,7 @@ namespace Asg3_6262723
             get;
             private set;
         }
+        public bool _Moving;
         Random r = new Random();
         float _Elapse;
         public Vector3 _PlayerDirection
@@ -57,6 +58,7 @@ namespace Asg3_6262723
             get;
             private set;
         }
+        #endregion
 
         private Chef(Chef Chef, Vector3 Position)
             : base(Chef._Model, Position, Chef._Bound.Min, Chef._Bound.Max)
@@ -64,8 +66,10 @@ namespace Asg3_6262723
             _Direction = new Vector3(0, 0, -1);
             _Destination = _Position;
             _Velocity = Vector3.Zero;
+            _Strength = Chef._Strength;
+            _Moving = false;
         }
-        public Chef(Model Model, Vector3 MinVec, Vector3 MaxVec, int MinThrowTimer, int MaxThrowTimer)
+        public Chef(Model Model, Vector3 MinVec, Vector3 MaxVec, int MinThrowTimer, int MaxThrowTimer, int Strength)
             : base(Model, MinVec, MaxVec)
         {
             _Direction = new Vector3(0, 0, -1);
@@ -75,9 +79,11 @@ namespace Asg3_6262723
             _MaxThrowTimer = MaxThrowTimer;
             _ThrowTimer = r.Next(_MinThrowTimer, _MaxThrowTimer);
             _Throw = false;
+            _Strength = Strength;
+            _Moving = false;
         }
 
-        public Chef(Model Model, Vector3 Position, Vector3 MinVec, Vector3 MaxVec, int MinThrowTimer, int MaxThrowTimer)
+        public Chef(Model Model, Vector3 Position, Vector3 MinVec, Vector3 MaxVec, int MinThrowTimer, int MaxThrowTimer, int Strength)
             : base(Model,Position, MinVec, MaxVec)
         {
             _Direction = new Vector3(0, 0, -1);
@@ -87,15 +93,24 @@ namespace Asg3_6262723
             _MaxThrowTimer = MaxThrowTimer;
             _ThrowTimer = r.Next(_MinThrowTimer, _MaxThrowTimer);
             _Throw = false;
+            _Strength = Strength;
+            _Moving = false;
         }
 
         public void Update(GameTime gameTime, Vector3 PlayerPos)
         {
             Aim(PlayerPos);
             if (Vector3.Distance(_Destination, _Position) >= 0.1)
+            {
                 _Position += _Velocity / 10;
+                _Moving = true;
+            }
             else
+            {
+                _Velocity = Vector3.Zero;
                 _Destination = _Position;
+                _Moving = false;
+            }
 
             _World = Matrix.CreateRotationX((float)-(Math.PI / 2)) * (Matrix.CreateRotationY(_Angle + (float)Math.PI) * Matrix.CreateTranslation(_Position));
 
@@ -108,6 +123,7 @@ namespace Asg3_6262723
                     _Throw = true;
                 }
             }
+
 
             base.UpdatePosition();
         }
@@ -148,7 +164,6 @@ namespace Asg3_6262723
         internal Chef Clone(Vector3 Position, Chef Chef)
         {
             Chef c = new Chef(this, Position);
-            //To Do Fill in
             return c;
         }
     }

@@ -121,6 +121,9 @@ namespace Asg3_6262723
                     _RespawnTimer = r.Next(_MinSpawn, _MaxSpawn);
                 }
             }
+
+            if (_ChefList.Count > 0 && _ChefList[0]._Strength <= 0)
+                Clear();
         }
 
         public void Summon()

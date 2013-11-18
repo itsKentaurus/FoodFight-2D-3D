@@ -23,12 +23,7 @@ namespace Asg3_6262723
             get;
             private set;
         }
-        public List<Food> _FoodList
-        {
-            get;
-            private set;
-        }
-        public Food _Food
+        public FoodType _FoodType
         {
             get;
             private set;
@@ -38,16 +33,21 @@ namespace Asg3_6262723
             get;
             private set;
         }
+        private int _Amount;
+        private int _LastDirection;
         #endregion
 
         #region Methods
-        public Character(Model Model, Vector3 MinVec, Vector3 MaxVec)
+        public Character(Model Model, Vector3 MinVec, Vector3 MaxVec, int Strength)
             : base(Model, MinVec, MaxVec)
         {
             _HoldingFood = false;
-            _FoodList = new List<Food>();
+            _Strength = Strength;
         }
-
+        public void SetStrength(int Health)
+        {
+            _Strength = Health;
+        }
         public void Update(GameTime gameTime)
         {
             _World = Matrix.CreateRotationX((float) -Math.PI / 2) *  (Matrix.CreateRotationY(_Angle) * Matrix.CreateTranslation(_Position));
@@ -60,6 +60,7 @@ namespace Asg3_6262723
         public void Move(int Direction, float Speed)
         {
             _Velocity = Direction * new Vector3(Speed * (float)Math.Sin(_Angle), 0, Speed * (float)Math.Cos(_Angle));
+            _LastDirection = Direction;
             _Position += _Velocity;
         }
 
@@ -68,24 +69,31 @@ namespace Asg3_6262723
             _Angle += Direction * 0.1f;
         }
 
-        public void PickUp(Food Food)
+        public void PickUp(FoodType Food,int  Amount)
         {
             if (!_HoldingFood)
-                _Food = Food.Clone();
+            {
+                _FoodType = Food;
+                _HoldingFood = true;
+                _Amount = Amount;
+            }
         }
-        public void Shoot()
+        public FoodType Shoot(float Speed)
         {
             if (_HoldingFood)
             {
-                _Food.Thrown(_Position, _Velocity);
-                _FoodList.Add(_Food);
+                _HoldingFood = false;
+                _Velocity = _LastDirection * new Vector3(Speed * (float)Math.Sin(_Angle), 0, Speed * (float)Math.Cos(_Angle));
+                return _FoodType;
             }
+            return FoodType.None;
         }
         public void Eat()
         {
             if (_HoldingFood)
             {
                 _HoldingFood = !_HoldingFood;
+                GainHealth(_Amount);
             }
         }
         #endregion

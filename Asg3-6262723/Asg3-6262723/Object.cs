@@ -10,6 +10,7 @@ namespace Asg3_6262723
 {
     public class Object
     {
+        #region Fields
         public Vector3 _Position
         {
             get;
@@ -40,6 +41,13 @@ namespace Asg3_6262723
             get;
             private set;
         }
+        public int _Strength
+        {
+            get;
+            protected set;
+        }
+        #endregion
+
         public Object(Model Model, Vector3 Position)
         {
             _Model = Model;
@@ -67,9 +75,23 @@ namespace Asg3_6262723
         public Object(Model Model, Vector3 Position, Vector3 MinVec, Vector3 MaxVec)
         {
             _Bound = new BoundingBox(MinVec + Position, MaxVec + Position);
+            _Min = MinVec;
+            _Max = MaxVec;
             _Model = Model;
             _Position = Position;
             _World = Matrix.CreateTranslation(Position);
+        }
+        public void SetPosition(Vector3 Position)
+        {
+            _Position = Position;
+        }
+        public void ReduceHealth(int Amount)
+        {
+            _Strength -= Amount;
+        }
+        public void GainHealth(int Amount)
+        {
+            _Strength += Amount;
         }
     }
 }
