@@ -96,7 +96,7 @@ namespace Asg3_6262723
                     }
 
 
-                    if (_PreviousKey.IsKeyDown(Keys.Escape) && _CurrentKey.IsKeyUp(Keys.Escape))
+                    if (_PreviousKey.IsKeyDown(Keys.Q) && _CurrentKey.IsKeyUp(Keys.Q))
                         Exit();
                     if (_PreviousKey.IsKeyDown(Keys.Space) && _CurrentKey.IsKeyUp(Keys.Space))
                         _CurrentGameState = GameState.Playing;
@@ -116,14 +116,6 @@ namespace Asg3_6262723
                     break;
 
                 case GameState.GameOver:
-                    if (GameSet)
-                    {
-                        _3DEngine.Reset();
-                        GameSet = false;
-                    }
-                    if (_PreviousKey.IsKeyDown(Keys.Escape) && _CurrentKey.IsKeyUp(Keys.Escape))
-                        _CurrentGameState = GameState.MainMenu;
-                    break;
                 case GameState.Clear:
                     if (GameSet)
                     {
