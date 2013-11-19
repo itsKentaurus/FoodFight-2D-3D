@@ -61,7 +61,7 @@ namespace Asg3_6262723
         #endregion
 
         private Chef(Chef Chef, Vector3 Position)
-            : base(Chef._Model, Position, Chef._Bound.Min, Chef._Bound.Max)
+            : base(Chef._Model, Position, Chef._Min, Chef._Max)
         {
             _Direction = new Vector3(0, 0, -1);
             _Destination = _Position;
@@ -102,7 +102,7 @@ namespace Asg3_6262723
             Aim(PlayerPos);
             if (Vector3.Distance(_Destination, _Position) >= 0.1)
             {
-                _Position += _Velocity / 10;
+                _Position += _Velocity * _Strength / 100;
                 _Moving = true;
             }
             else

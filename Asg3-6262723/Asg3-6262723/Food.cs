@@ -30,29 +30,45 @@ namespace Asg3_6262723
             get;
             private set;
         }
-
+        private float _Elapse;
+        float y = 0.05f;
+        float Scale = 1f;
 
         public Food(Model Model, Vector3 MinVec, Vector3 MaxVec, int Strength)
             : base(Model, MinVec, MaxVec)
         {
             _Strength = Strength;
+            _World = Matrix.CreateRotationX((float)-(Math.PI / 2)) * Matrix.CreateTranslation(_Position);
         }
 
         public Food(Model Model, Vector3 Position, Vector3 MinVec, Vector3 MaxVec, FoodType Type)
             : base(Model, Position, MinVec, MaxVec)
         {
             _Type = Type;
+            _World = Matrix.CreateRotationX((float)-(Math.PI / 2)) * Matrix.CreateTranslation(_Position);
         }
         private Food(Food Food)
             : base(Food._Model, Food._Bound)
         {
             _Type = Food._Type;
             _Strength = Food._Strength;
+            _World = Matrix.CreateRotationX((float)-(Math.PI / 2)) * Matrix.CreateTranslation(_Position);
         }
         public void Update(GameTime gameTime)
         {
-            _Position += _Velocity;
-            _World = Matrix.CreateRotationX((float)-(Math.PI / 2)) * Matrix.CreateTranslation(_Position);
+            if (_Type != FoodType.None)
+            {
+                _Elapse += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (_Elapse > 0.05f)
+                    y -= 0.001f;
+                _Position += _Velocity + new Vector3(0, y, 0);
+                _World = Matrix.CreateRotationX((float)-(Math.PI / 2)) * Matrix.CreateTranslation(_Position);
+            }
+            else
+            {
+                Scale -= 0.00065f;
+                _World = Matrix.CreateScale(Scale) *  Matrix.CreateRotationX((float)-(Math.PI / 2)) * Matrix.CreateTranslation(_Position);
+            }
             base.UpdatePosition();
         }
 

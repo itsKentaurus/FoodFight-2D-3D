@@ -38,6 +38,7 @@ namespace Asg3_6262723
         List<Object> _ObjectList;
         Matrix _Projection;
         BoundingBox _Bounds;
+        MouseState _Mouse;
         #endregion
 
         #region CONST
@@ -75,14 +76,43 @@ namespace Asg3_6262723
             _HoleList = new List<Hole>();
             _ObjectList = new List<Object>();
             _TypeList = new List<Food>();
-
             #region Ice Cream
             _IceCream = new Food(Content.Load<Model>("Models/IceCream"), Vector3.Zero, new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 1, 0.5f), FoodType.None);
             #endregion
             #region Player
             _Player = new Character(Content.Load<Model>("Models/Player"), new Vector3(-0.5f, 0, -0.5f), new Vector3(0.5f, 3, 0.5f), _PlayerStrength);
             #endregion
+            #region Floor
+            for (int i = -(_WIDTH / 2) - 1; i < (_WIDTH / 2) + 1; ++i)
+                for (int j = -1; j < _DEPTH + 1; ++j)
+                    _ObjectList.Add(new Object(Content.Load<Model>("Models/floor"), new Vector3(i * -2f, 0, j * -2f)));
 
+            #endregion
+            #region Wall Right
+            for (int j = -1; j < _DEPTH + 1; ++j)
+                for (int i = 0; i < 3; ++i)
+                    _ObjectList.Add(new Object(Content.Load<Model>("Models/wall"), new Vector3(((-(_WIDTH / 2) - 1) * -2f)+1, i * 2, j * -2f), (float)-Math.PI / 2, true));
+            #endregion
+            #region Wall Left
+            for (int j = -1; j < _DEPTH + 1; ++j)
+                for (int i = 0; i < 3; ++i)
+                    _ObjectList.Add(new Object(Content.Load<Model>("Models/wall"), new Vector3((((_WIDTH / 2)) * -2f) - 1, i * 2, j * -2f), (float)Math.PI / 2, true));
+            #endregion
+            #region Wall Near
+            for (int j = -(_WIDTH / 2) - 1; j < (_WIDTH / 2) + 1; ++j)
+                for (int i = 0; i < 3; ++i)
+                    _ObjectList.Add(new Object(Content.Load<Model>("Models/wall"), new Vector3(j * -2f, i * 2, (-1 * -2f) + 1), (float)-Math.PI / 2));
+            #endregion
+            #region Wall Far
+            for (int j = -(_WIDTH / 2) - 1; j < (_WIDTH / 2) + 1; ++j)
+                for (int i = 0; i < 3; ++i)
+                    _ObjectList.Add(new Object(Content.Load<Model>("Models/wall"), new Vector3(j * -2f, i * 2, ((_DEPTH) * -2f) - 1), (float)Math.PI / 2));
+            #endregion
+            #region Ceiling
+            for (int i = -(_WIDTH / 2) - 1; i < (_WIDTH / 2) + 1; ++i)
+                for (int j = -1; j < _DEPTH + 1; ++j)
+                    _ObjectList.Add(new Object(Content.Load<Model>("Models/floor"), new Vector3(i * -2f, 5, j * -2f),(float) Math.PI));
+            #endregion
         }
 
         public void Setup()
@@ -163,12 +193,6 @@ namespace Asg3_6262723
 
             _ThrownList = new List<Food>();
             #endregion
-            #region Floor
-            for (int i = -(_WIDTH / 2) - 1; i < (_WIDTH / 2) + 1; ++i)
-                for (int j = -1; j < _DEPTH + 1; ++j)
-                    _ObjectList.Add(new Object(Content.Load<Model>("Models/floor"), new Vector3(i * -2f, 0, j * -2f)));
-
-            #endregion
 
             _IceCream.SetPosition(new Vector3(r.Next(-(_WIDTH / 2), (_WIDTH / 2) + 1) * -2, 0, (_DEPTH) * -2));
             _Player.SetPosition(Vector3.Zero);
@@ -181,14 +205,11 @@ namespace Asg3_6262723
             _FoodList.Clear();
             _TypeList.Clear();
             _ThrownList.Clear();
-            _ObjectList.Clear();
-
         }
 
         public GameState Update(GameTime gameTime, Text Health, Text Timer)
         {
             Controls();
-
             int ChefCount = 0;
             Random r = new Random();
             List<Food> Temp = new List<Food>();
@@ -282,7 +303,7 @@ namespace Asg3_6262723
                     }
                     foreach (Food node in _ThrownList)
                     {
-                        if (!c._Moving && c._Bound.Intersects(node._Bound))
+                        if (c._Bound.Intersects(node._Bound))
                         {
                             c.ReduceHealth(node._Strength);
                             Temp.Add(node);
@@ -292,6 +313,7 @@ namespace Asg3_6262723
                         {
                             c.ReduceHealth(_ChefStrength);
                             Temp.Add(node);
+                            _Audio.Play("Enemy", "Doh");
                         }
                     }
                     c.Update(gameTime, _Player._Position);
@@ -353,6 +375,15 @@ namespace Asg3_6262723
         }
         private void Controls()
         {
+
+            MouseState _Mouse = Mouse.GetState();
+
+            if (_Mouse.X > 300)
+                _Player.Turn(-1, ANGLE);
+            if (_Mouse.X < 300)
+                _Player.Turn(1, ANGLE);
+            Mouse.SetPosition(300, 400);
+
             KeyboardState ks = Keyboard.GetState();
             Keys[] keys = ks.GetPressedKeys();
             foreach (Keys key in keys)
@@ -372,7 +403,7 @@ namespace Asg3_6262723
                         _Player.Turn(1, ANGLE);
                         break;
                     case Keys.Space:
-                        if (_Player._FoodType != FoodType.None)
+                        if (_Player._HoldingFood &&  _Player._FoodType != FoodType.None)
                         {
                             int num = 0;
                             if (_Player._FoodType == FoodType.Pizza)
@@ -386,7 +417,7 @@ namespace Asg3_6262723
                             Food f = _TypeList[num].Clone();
                             f.Thrown(_Player._Position + new Vector3(0, 1.5f, 0) + _Player._Velocity * 10, _Player._Velocity * 12);
                             _ThrownList.Add(f);
-                            _Audio.Play("Kathy", "Thrown");
+//                            _Audio.Play("Kathy", "Thrown");
                         }
                         break;
                     case Keys.E:
@@ -401,7 +432,6 @@ namespace Asg3_6262723
                                 num = 1;
 
                             Food f = _TypeList[num].Clone();
-                            Console.WriteLine(f._Strength);
                             _Player.Eat(f._Strength);
                         }
                         break;

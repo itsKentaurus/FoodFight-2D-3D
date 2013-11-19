@@ -66,7 +66,7 @@ namespace Asg3_6262723
 
         public void Turn(int Direction, float Angle)
         {
-            _Angle += Direction * 0.1f;
+            _Angle += Direction * Angle * 0.7f ;
         }
 
         public void PickUp(FoodType Food,int  Amount)

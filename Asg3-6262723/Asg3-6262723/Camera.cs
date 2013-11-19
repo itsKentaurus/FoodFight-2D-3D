@@ -30,9 +30,9 @@ namespace Asg3_6262723
         public void Update(GameTime gameTime, Character Player)
         {
             if (IsThirdPerson())
-                _Position = Matrix.CreateLookAt(new Vector3(10 * (float)Math.Cos(0) * (float)Math.Sin(Player._Angle),
+                _Position = Matrix.CreateLookAt(new Vector3(7 * (float)Math.Cos(0) * (float)Math.Sin(Player._Angle),
                                             5,
-                                            10 * (float)Math.Cos(Player._Angle)) + Player._Position, Player._Position, Vector3.UnitY);
+                                            7 * (float)Math.Cos(Player._Angle)) + Player._Position, Player._Position + new Vector3(0,2,0), Vector3.UnitY);
             if (IsFirstPerson())
                 _Position = Matrix.CreateLookAt(Player._Position + new Vector3(0,2,0), Player._Position + new Vector3(-1 * (float)Math.Cos(0) * (float)Math.Sin(Player._Angle),
                                             2,

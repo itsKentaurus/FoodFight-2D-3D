@@ -36,10 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Audio.cs" />
-    <Compile Include="Button.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="Chef.cs" />
+    <Compile Include="EnemyHealth.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Food.cs" />
     <Compile Include="Game1.cs" />
@@ -102,6 +102,9 @@
     <Content Include="Content\Menus\Screen\Pause.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Screen.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup />
@@ -136,6 +139,9 @@
     <None Include="Content\Models\banana.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Content\Models\hp.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Content\Models\IceCream.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -159,6 +165,9 @@
     </None>
     <None Include="Content\Models\Square.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Models\wall.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

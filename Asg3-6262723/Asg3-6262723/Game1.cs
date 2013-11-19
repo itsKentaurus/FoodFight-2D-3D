@@ -113,6 +113,9 @@ namespace Asg3_6262723
                     _CurrentGameState = _3DEngine.Update(gameTime, _Health, _Timer);
                     if (_CurrentGameState == GameState.Playing && _PreviousKey.IsKeyDown(Keys.Escape) && _CurrentKey.IsKeyUp(Keys.Escape))
                         _CurrentGameState = GameState.Pause;
+
+                    FoodType ft = _3DEngine._Player._FoodType;
+
                     break;
 
                 case GameState.Pause:
@@ -161,22 +164,22 @@ namespace Asg3_6262723
                     break;
                 case GameState.Playing:
                     #region Playing
-            BlendState OriginalBlend = graphics.GraphicsDevice.BlendState;
-            DepthStencilState OriginalStencil = graphics.GraphicsDevice.DepthStencilState;
-            SamplerState OriginalSampler = graphics.GraphicsDevice.SamplerStates[0];
+                    BlendState OriginalBlend = graphics.GraphicsDevice.BlendState;
+                    DepthStencilState OriginalStencil = graphics.GraphicsDevice.DepthStencilState;
+                    SamplerState OriginalSampler = graphics.GraphicsDevice.SamplerStates[0];
 
-            graphics.GraphicsDevice.BlendState = BlendState.Opaque;
-            graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            graphics.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+                    graphics.GraphicsDevice.BlendState = BlendState.Opaque;
+                    graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                    graphics.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
-            _3DEngine.Draw();
+                    _3DEngine.Draw();
 
-            graphics.GraphicsDevice.BlendState = OriginalBlend;
-            graphics.GraphicsDevice.DepthStencilState = OriginalStencil;
-            graphics.GraphicsDevice.SamplerStates[0] = OriginalSampler;
+                    graphics.GraphicsDevice.BlendState = OriginalBlend;
+                    graphics.GraphicsDevice.DepthStencilState = OriginalStencil;
+                    graphics.GraphicsDevice.SamplerStates[0] = OriginalSampler;
 
-            foreach(Text t in _TextList)
-                t.Draw(spriteBatch, sf, Color.Black);
+                    foreach(Text t in _TextList)
+                        t.Draw(spriteBatch, sf, Color.Black);
 
             #endregion
                     break;
