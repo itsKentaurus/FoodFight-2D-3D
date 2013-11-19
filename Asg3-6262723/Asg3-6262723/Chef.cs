@@ -114,14 +114,12 @@ namespace Asg3_6262723
 
             _World = Matrix.CreateRotationX((float)-(Math.PI / 2)) * (Matrix.CreateRotationY(_Angle + (float)Math.PI) * Matrix.CreateTranslation(_Position));
 
-            if (!_Throw)
+            if (!_Throw && _Strength > 0)
             {
                 _Elapse += (float) gameTime.ElapsedGameTime.TotalSeconds;
 
                 if (_Elapse > _ThrowTimer)
-                {
                     _Throw = true;
-                }
             }
 
 
@@ -157,11 +155,6 @@ namespace Asg3_6262723
         }
 
         internal Chef Clone(Vector3 Position)
-        {
-            Chef c = new Chef(this, Position);
-            return c;
-        }
-        internal Chef Clone(Vector3 Position, Chef Chef)
         {
             Chef c = new Chef(this, Position);
             return c;

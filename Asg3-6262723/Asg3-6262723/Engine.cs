@@ -27,6 +27,7 @@ namespace Asg3_6262723
         Food _IceCream;
         float _Elapse;
         ContentManager Content;
+        Audio _Audio;
         #endregion
 
         #region Fields
@@ -59,6 +60,10 @@ namespace Asg3_6262723
         int _BananaStrength = 7;
         int _OrangeStrength = 5;
         #endregion
+        public Engine3D(ref Audio Audio)
+        {
+            _Audio = Audio;
+        }
 
         public void Initialize(ContentManager Content)
         {
@@ -256,8 +261,8 @@ namespace Asg3_6262723
                         int HoleNum = r.Next(_HOLECOUNT);
                         if (_HoleList[HoleNum]._ChefList.Count <= 0 && _HoleList[HoleNum] != h)
                         {
-                            Chef temp = h._ChefList[0];
-                            _HoleList[HoleNum].Summon(h._Position, h._ChefList[0]);
+                            Chef temp = h._ChefList[0].Clone(h._Position);
+                            _HoleList[HoleNum].Summon(temp);
                             h.Clear();
                             clear = true;
                         }
@@ -281,6 +286,7 @@ namespace Asg3_6262723
                         {
                             c.ReduceHealth(node._Strength);
                             Temp.Add(node);
+                            _Audio.Play("Enemy", "Doh");
                         }
                         if (c._Moving && c._Bound.Intersects(node._Bound))
                         {
@@ -290,7 +296,7 @@ namespace Asg3_6262723
                     }
                     c.Update(gameTime, _Player._Position);
                 }
-                h.Update(gameTime);
+                h.Update(gameTime, _Audio);
             }
 
             foreach (Hole node in _HoleList)
@@ -366,24 +372,38 @@ namespace Asg3_6262723
                         _Player.Turn(1, ANGLE);
                         break;
                     case Keys.Space:
-                        FoodType ft = _Player.Shoot(SPEED);
-                        if (ft != FoodType.None)
+                        if (_Player._FoodType != FoodType.None)
                         {
                             int num = 0;
-                            if (ft == FoodType.Pizza)
+                            if (_Player._FoodType == FoodType.Pizza)
                                 num = 0;
-                            if (ft == FoodType.Banana)
+                            if (_Player._FoodType == FoodType.Banana)
                                 num = 2;
-                            if (ft == FoodType.Orange)
+                            if (_Player._FoodType == FoodType.Orange)
                                 num = 1;
 
+                            _Player.Shoot(SPEED);
                             Food f = _TypeList[num].Clone();
                             f.Thrown(_Player._Position + new Vector3(0, 1.5f, 0) + _Player._Velocity * 10, _Player._Velocity * 12);
                             _ThrownList.Add(f);
+                            _Audio.Play("Kathy", "Thrown");
                         }
                         break;
                     case Keys.E:
-                        _Player.Eat();
+                        if (_Player._FoodType != FoodType.None)
+                        {
+                            int num = 0;
+                            if (_Player._FoodType == FoodType.Pizza)
+                                num = 0;
+                            if (_Player._FoodType == FoodType.Banana)
+                                num = 2;
+                            if (_Player._FoodType == FoodType.Orange)
+                                num = 1;
+
+                            Food f = _TypeList[num].Clone();
+                            Console.WriteLine(f._Strength);
+                            _Player.Eat(f._Strength);
+                        }
                         break;
                     case Keys.D1:
                         _Camera.ToggleFirst();

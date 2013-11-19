@@ -78,22 +78,20 @@ namespace Asg3_6262723
                 _Amount = Amount;
             }
         }
-        public FoodType Shoot(float Speed)
+        public void Shoot(float Speed)
         {
             if (_HoldingFood)
             {
                 _HoldingFood = false;
                 _Velocity = _LastDirection * new Vector3(Speed * (float)Math.Sin(_Angle), 0, Speed * (float)Math.Cos(_Angle));
-                return _FoodType;
             }
-            return FoodType.None;
         }
-        public void Eat()
+        public void Eat(int Amount)
         {
             if (_HoldingFood)
             {
                 _HoldingFood = !_HoldingFood;
-                GainHealth(_Amount);
+                GainHealth(Amount);
             }
         }
         #endregion

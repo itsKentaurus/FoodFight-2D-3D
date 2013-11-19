@@ -96,7 +96,7 @@ namespace Asg3_6262723
             _StartSpawn = false;
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Audio audio)
         {
             if (!_Moving && _ChefList.Count > 0)
             {
@@ -118,6 +118,7 @@ namespace Asg3_6262723
                 {
                     Chef c = _Chef.Clone(_Position);
                     _ChefList.Add(c);
+                    audio.Play("Hole", "Summon");
                     _RespawnTimer = r.Next(_MinSpawn, _MaxSpawn);
                 }
             }
@@ -130,11 +131,10 @@ namespace Asg3_6262723
         {
             _StartSpawn = true;
         }
-        public void Summon(Vector3 Position, Chef Chef)
+        public void Summon(Chef Chef)
         {
-            Chef c = _Chef.Clone(Position, Chef);
-            c.Move(_Position);
-            _ChefList.Add(c);
+            Chef.Move(_Position);
+            _ChefList.Add(Chef);
             _StartSpawn = true;
         }
         public void Clear()

@@ -31,11 +31,13 @@ namespace Asg3_6262723
         #endregion
 
         Engine3D _3DEngine;
+        Audio _Audio;
+        
         Text _Timer;
         Text _Health;
         List<Text> _TextList;
+
         GameState _CurrentGameState;
-        Button _Play;
         KeyboardState _PreviousKey;
         KeyboardState _CurrentKey;
         bool GameSet;
@@ -54,9 +56,13 @@ namespace Asg3_6262723
         {
             base.Initialize();
             _CurrentGameState = GameState.MainMenu;
-            _3DEngine = new Engine3D();
-            _3DEngine.Initialize(Content);
             GameSet = false;
+            _Audio = new Audio();
+            _Audio.Initialize();
+
+            _3DEngine = new Engine3D(ref _Audio);
+            _3DEngine.Initialize(Content);
+
             #region Text
             _TextList = new List<Text>();
             _TextList.Add(new Text("Health: ", new Vector2(graphics.PreferredBackBufferWidth * 0.70f, graphics.PreferredBackBufferHeight * 0.75f)));
@@ -87,6 +93,7 @@ namespace Asg3_6262723
             switch (_CurrentGameState)
             {
                 case GameState.MainMenu:
+                    _Audio.StartGame();
                     if (!GameSet)
                     {
                         _3DEngine.Setup();
@@ -116,7 +123,17 @@ namespace Asg3_6262723
                     break;
 
                 case GameState.GameOver:
+                    _Audio.StartGameOver();
+                    if (GameSet)
+                    {
+                        _3DEngine.Reset();
+                        GameSet = false;
+                    }
+                    if (_PreviousKey.IsKeyDown(Keys.Escape) && _CurrentKey.IsKeyUp(Keys.Escape))
+                        _CurrentGameState = GameState.MainMenu;
+                    break;
                 case GameState.Clear:
+                    _Audio.StartVictory();
                     if (GameSet)
                     {
                         _3DEngine.Reset();
@@ -126,6 +143,8 @@ namespace Asg3_6262723
                         _CurrentGameState = GameState.MainMenu;
                     break;
             }
+
+            _Audio.Update();
 
             base.Update(gameTime);
         }

@@ -35,6 +35,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Audio.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Character.cs" />
@@ -105,6 +106,27 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Content\Audio\Enemy.xsb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Audio\FoodFightNow.xgs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Audio\GameEffect.xsb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Audio\GameMusic.xsb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Audio\Hole.xsb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Audio\Kathy.xsb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Audio\Wave Bank.xwb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Content\Font.spritefont">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
